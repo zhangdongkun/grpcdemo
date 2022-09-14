@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: spb-client
+server:
+  port: 8081
+grpc:
+  client:
+    grpc-server:
+      address: 'static://127.0.0.1:9090'
+      negotiationType: plaintext

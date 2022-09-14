@@ -1,0 +1,52 @@
+// 使用proto3语法
+syntax = "proto3";
+// 生成多个类
+option java_multiple_files = false;
+// 生成java类所在的包
+option java_package = "com.zdk.news.proto";
+// 生成外层类类名
+option java_outer_classname = "NewsProto";
+// 逻辑包名
+package news;
+//service服务，用于描述要生成的API接口，类似于Java的业务逻辑接口类
+service NewsService {
+    //rpc 方法( 参数类型)     returns (返回类型){}
+    rpc list(NewsRequest) returns (NewsResponse) {}
+    rpc hello(StringRequest) returns (StringResponse){}
+}
+/*
+    消息是gRPC描述信息的基本单位，类似Java的"实体类"
+    消息的名字，对应于生成代码后的类名
+    每一个消息都对应生成一个类，根据java_multiple_files设置不同文件数量也不同
+    java_multiple_files=true，protobuf为每一个消息自动生成一个java文件
+    java_multiple_files=false，protobuf会生成一个大类，消息作为内部类集中在一个java文件
+ */
+message NewsRequest {
+    /*
+        字段：类型 名称 = 索引值(id)
+        每个字段都要定义唯一的索引值，这些数字是用来在消息的二进制格式中识别各个字段的。
+        一旦开始使用就不能够再改变，最小的标识号可以从1开始，最大到2^29 - 1, or 536,870,911。
+        不可以使用其中的[19000－19999]的标识号， Protobuf协议实现中对这些进行了预留。
+        切记：要为将来有可能添加的、频繁出现的标识号预留一些标识号。
+    */
+    string date = 1;
+}
+message NewsResponse {
+    //repeated说明是一个集合（数组），数组每一个元素都是News对象
+    repeated News news = 1; //List<News> getNewsList();
+}
+//News新闻实体对象
+message News{
+    int32 id = 1;//int id = 0;
+    string title = 2;// String title = "";
+    string content = 3; //String content = "";
+    int64 createTime = 4; //long createTime = 0l;
+}
+
+message StringRequest{
+    string name = 1;
+}
+
+message StringResponse{
+    string result = 1;
+}
